@@ -2,7 +2,7 @@
 # Wonseok Hwang
 # License: GPLv3
 # Tested on ipython -pylab. python 3.4 with matplotlib
-# Code written by me after read
+# Code is written by Wonseok Hwang after reading
 # 1. "HMM tutorial" note : http://www.ee.surrey.ac.uk/Personal/P.Jackson/tutorial/
 # 2. "Sagemath hmm module" (chmm.pyx)
 ## 0.
