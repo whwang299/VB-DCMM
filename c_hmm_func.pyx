@@ -1,8 +1,7 @@
 # 2014 Sep16, Oct 8
 # Wonseok Hwang
 # License: GPLv3
-# Tested on ipython -pylab. python 3.4 with matplotlib
-# Code is written by Wonseok Hwang after reading
+# Code written by Wonseok Hwang after reading
 # 1. "HMM tutorial" note : http://www.ee.surrey.ac.uk/Personal/P.Jackson/tutorial/
 # 2. "Sagemath hmm module" (chmm.pyx)
 ## 0.
@@ -28,18 +27,21 @@ sig_min = 0.001
 def c_hmm_func(o_arr, p_init_0, p_xh_0, mu_arr_0, sig_arr_0):
   """
   input:
-  o_arr
-  p_init_0
-  p_xh_0
-  mu_arr_0
-  sig_arr_0
+  o_arr: 1-D time trajectory
+  p_init_0: Initial guess for probability distribution.
+  p_xh_0: Initial guess for transition matrix
+  mu_arr_0: Initial guess for mean value of each state.
+  sig_arr_0: Initial guess for std of each state.
 
   output:
-  log_probability
-  xh_arr_post
-  p_xh_post
-  mu_arr_post
-  sig_arr_post
+  log_probability: Likelihood
+  n_iter: number of iterations
+  xh_arr_post: state (integer) sequence
+  x_arr: noise-filtered time trajectory.
+  p_init_out: estimated initial transition probability
+  p_xh_out: estimated transition matrix
+  mu_arr_post: estimated mean values
+  sig_arr_post: estimated std values
   """
   ## 2. Load data (generated from Matlab/Octave file)
   cdef int T = len(o_arr)
