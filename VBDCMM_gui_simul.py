@@ -5,7 +5,6 @@ import matplotlib
 matplotlib.use('TkAgg')
 
 from matplotlib.pylab import *
-#from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg 
 from VBDCMM_gui_functions import generate_xhh_func
 from VBDCMM_gui_functions import generate_o_func
@@ -13,10 +12,6 @@ from VBDCMM_gui_functions import VBDCMM_gui_analaysis_func
 
 import matplotlib
 #matplotlib.rcParams.update({'figure.autolayout': True})
-
-# ---- ?? OK now certainly?? ------ 
-#from matplotlib.backend_bases import key_press_handler 
-# ---------------------------------
 
 import tkinter as Tk
 
@@ -372,9 +367,10 @@ class VBDCMM_gui_simul:
       for i in range(1, _L+1):
         for j in range(1, _L+1):
           if i != j:
-            _s += '\n'+'self.B' + str(k) + str(i) + str(j) + '.set(' + str( (1/4**k * 0.1)/(_L-1)) + ')'
+            _s += '\n'+'self.B' + str(k) + str(i) + str(j) + '.set(' + str( (1/4**(k-1) * 0.1)/(_L-1)) + ')'
           if i == j:
-            _s += '\n'+'self.B' + str(k) + str(i) + str(j) + '.set(' + str( 1 - 1/4**k * 0.1) + ')'
+            _s += '\n'+'self.B' + str(k) + str(i) + str(j) + '.set(' + str( 1 - 1/4**(k-1) * 0.1) + ')'
+
     exec(_s)
 
     _s = ''

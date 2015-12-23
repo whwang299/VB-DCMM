@@ -32,8 +32,8 @@ def c_dcmm4vb_func( np.ndarray o_arr_filtered,
   """ 
   Input:
   o_arr_filtered: Noise-filtered FRET value
-  A_0: transition matrix for hh
-  C_0: transition matrix for h
+  A_0: transition matrix for hh (hiden, internal state)
+  C_0: transition matrix for h (noise-filtered obseravable)
 
   Output:
   gamma_arr: gamma_arr
@@ -41,10 +41,10 @@ def c_dcmm4vb_func( np.ndarray o_arr_filtered,
   log_probability: likelihood
 
   Notations:
-  Nhh: Total # of hidden-hidden states
-  Nh: Total # of hiden states
-  xhh: hidden states that determin transiton rates of xh
-  xh: (integer version) observable states.
+  Nhh: Total # of hidden-hidden states (internal states)
+  Nh: Total # of hiden states (noise-filtered observables)
+  xhh: hidden states that determin transiton rates of xh (internal state)
+  xh: (noise-filtered, integer version) observable states.
   p_init_post
   A: transition matrix for xhh
   C: transition matrix for xh

@@ -36,10 +36,10 @@ def vbDCMM_random_1_func( xh_arr_post, p_xh_post, mu_arr_post, # From pre-hmm an
   p_xh_post: Estimated transition matrix for observable states using HMM.
   mu_arr_post: Estimated average value of each observable state.
   t_set: For calculation of W_b. See the paper.
-  uphi_prior, ua_prior, uad_prior, ub_prior, ubd_prior: prior parameters for initial parameter distribution. See our paper for detail
+  uphi_prior, ua_prior, uad_prior, ub_prior, ubd_prior: prior parameters for initial parameter distribution. See our paper for the details
   u**_prior_ic: prior parameters used in generation of random initial conditions.
   e_cutoff: Target precision for F.
-  answer_ub_from_hmm: if 'y', use p_xh_post is used to make ub_prior and ubd_prior. See our paper for the detail.
+  answer_ub_from_hmm: if 'y', use p_xh_post is used to make ub_prior and ubd_prior. See our paper for the details.
 
 
 

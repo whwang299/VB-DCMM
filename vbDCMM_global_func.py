@@ -24,25 +24,25 @@ def vbDCMM_global_func(
                 e_cutoff=1e-3, 
                 max_iter_vb=500, 
                 answer_fix_init_param='n',
-                N_gl=10,
-                answer_ub_from_hmm='n'): # Trial number for global maximum searching
+                N_gl=10, # Trial number for global maximum searching
+                answer_ub_from_hmm='n'): 
   """
   Inputs:
 
-  xh_arr_post: Sequence of noise-filtered observable states
+  xh_arr_post: Sequence of noise-filtered observable state.
   p_xh_post: Estimated transition matrix for observable states using HMM.
   mu_arr_post: Estimated average value of each observable state.
-  uphi_prior, ua_prior, uad_prior, ub_prior, ubd_prior: prior parameters for initial parameter distribution. See our paper for detail
+  uphi_prior, ua_prior, uad_prior, ub_prior, ubd_prior: prior parameters for initial parameter distribution. See our paper for the details.
   u**_prior_ic: prior parameters used in generation of random initial conditions.
   N_gl: Number of repeat (to avoid local minimum)
-  answer_ub_from_hmm: if 'y', use p_xh_post is used to make ub_prior and ubd_prior. See our paper for the detail.
+  answer_ub_from_hmm: if 'y', p_xh_post is used to make ub_prior and ubd_prior. See our paper for the details.
 
 
 
   Outputs:
 
   xhh_arr_post_best_list: Most probable sequence of internal state for each model.
-  phi_star_arr_best_list: phi
+  phi_star_arr_best_list: Estimated phi.
   a_star_arr_best_list: Estimated A (transition matrix for internal state) for each model.
   b_star_arr_best_list: Estimated B (transitoin matrix for observable state) for each model.
   Fphi_arr_best_list: Fphi for each model.

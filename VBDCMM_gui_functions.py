@@ -659,8 +659,8 @@ def VBDCMM_gui_analaysis_func(o_arr):
                                           ub_prior=ub_prior, ubd_prior=ubd_prior,
                                           ua_prior_ic=ua_prior_ic, uad_prior_ic=uad_prior_ic,
                                           ub_prior_ic=ub_prior_ic, ubd_prior_ic=ubd_prior_ic,
-                                           e_cutoff=1e-3, max_iter_vb=max_iter_vb, N_gl=N_gl,
-                                           answer_ub_from_hmm=answer_ub_from_hmm)
+                                          e_cutoff=1e-3, max_iter_vb=max_iter_vb, N_gl=N_gl,
+                                          answer_ub_from_hmm=answer_ub_from_hmm)
 
       # Choose best model.
       _method = self.spinbox_F_methods.get()
