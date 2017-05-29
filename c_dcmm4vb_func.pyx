@@ -1,7 +1,8 @@
 # 2014 Sep16, Oct 8, Oct 16
 # Wonseok Hwang
 # License: GPLv3
-# Code written by Wonseok Hwang after reading
+# Tested on ipython -pylab. python 3.4 with matplotlib
+# Code written by me after read
 # 1. "HMM tutorial" note : http://www.ee.surrey.ac.uk/Personal/P.Jackson/tutorial/
 # 2. "Sagemath hmm module" (chmm.pyx)
 # 3. Double Chain Makov Model: A. Berchtold, The Double Chain Markov Model, 
@@ -32,22 +33,18 @@ def c_dcmm4vb_func( np.ndarray o_arr_filtered,
   """ 
   Input:
   o_arr_filtered: Noise-filtered FRET value
-  A_0: transition matrix for hh (hiden, internal state)
-  C_0: transition matrix for h (noise-filtered obseravable)
+  Nhh: Total # of hidden-hidden states
+  Nh: Total # of hiden states
+  A_0: transition matrix for hh
+  C_0: transition matrix for h
 
   Output:
-  gamma_arr: gamma_arr
-  xi_arr: xi_arr 
-  log_probability: likelihood
-
-  Notations:
-  Nhh: Total # of hidden-hidden states (internal states)
-  Nh: Total # of hiden states (noise-filtered observables)
-  xhh: hidden states that determin transiton rates of xh (internal state)
-  xh: (noise-filtered, integer version) observable states.
+  log_probability
+  xhh_arr_post: Estimated one
+  xh_arr: just integer-value-converted version 
   p_init_post
-  A: transition matrix for xhh
-  C: transition matrix for xh
+  A_post
+  C_post
   """
   ## 1. Convert o_arr_filtered to xh_arr
   cdef int Nhh = plt.shape( A_0 )[0] # or C_0[0]
@@ -62,7 +59,8 @@ def c_dcmm4vb_func( np.ndarray o_arr_filtered,
   cdef int i
   cdef DTYPE_t val
   for t in range(T):
-    for i in range( Nh ): #len(fret_vals) ):
+    #for i in range( Nh ): #len(fret_vals) ):
+    for i in range( len(fret_vals) ):
       if o_arr_filtered[t] == fret_vals[i]:
         xh_arr[t] = DTYPE(i)
         continue
@@ -84,7 +82,7 @@ def c_dcmm4vb_func( np.ndarray o_arr_filtered,
   
     cdef int i, j, k, t
     for i in range(Nhh):
-      alpha_arr_r[1,i] = p_init[i] * C[i, xh_arr[0], xh_arr[1] ]
+      alpha_arr_r[1,i] = p_init[i] * C[i, int(xh_arr[0]), int(xh_arr[1]) ]
       a_scale[1] += alpha_arr_r[1,i]
   
     for i in range(Nhh):
@@ -95,7 +93,7 @@ def c_dcmm4vb_func( np.ndarray o_arr_filtered,
         for i in range(Nhh):
           alpha_arr_r[t, j] += alpha_arr_r[t-1, i] * A[i, j]
 
-        alpha_arr_r[t,j] *= C[ j, xh_arr[t-1], xh_arr[t] ]
+        alpha_arr_r[t,j] *= C[ j, int(xh_arr[t-1]), int(xh_arr[t]) ]
         a_scale[t] += alpha_arr_r[t, j]
   
       for j in range(Nhh):
@@ -124,7 +122,7 @@ def c_dcmm4vb_func( np.ndarray o_arr_filtered,
     for t in range(T-2, 0, -1): # T-2, T-3, ..., 1
       for i in range(Nhh):
         for j in range(Nhh):
-          beta_arr_r[t,i] += C[ j, xh_arr[t], xh_arr[t+1] ] \
+          beta_arr_r[t,i] += C[ j, int(xh_arr[t]), int(xh_arr[t+1]) ] \
                             * A[i, j] \
                             * beta_arr_r[t+1, j]
         
@@ -178,7 +176,7 @@ def c_dcmm4vb_func( np.ndarray o_arr_filtered,
         for j in range(Nhh):
           xi_arr[t, i, j] = alpha_arr_r[t, i] \
                          * A[i, j] \
-                         * C[j, xh_arr[t], xh_arr[t+1]] \
+                         * C[j, int(xh_arr[t]), int(xh_arr[t+1])] \
                          * beta_arr_r[t+1, j]
           denominator += xi_arr[t, i, j]
   

@@ -1,11 +1,14 @@
 # 2014 Sep16, Oct 8, Oct 16
 # Wonseok Hwang
 # License: GPLv3
-# Code written by Wonseok Hwang after read
+# Tested on ipython -pylab. python 3.4 with matplotlib
+# Code written by me after read
 # 1. "HMM tutorial" note : http://www.ee.surrey.ac.uk/Personal/P.Jackson/tutorial/
 # 2. "Sagemath hmm module" (chmm.pyx)
 # 3. Double Chain Makov Model: A. Berchtold, The Double Chain Markov Model, 
 #                              Technical report (Washington univ), 1999.
+#. Functionalize
+# 2015 Feb28, Debug: xi_arr. "denominator" hasn't been used so far.
 ## 0.
 
 #from matplotlib.pylab import *
@@ -31,13 +34,18 @@ def c_dcmm_viterbi_func( np.ndarray o_arr_filtered,
   """ 
   Input:
   o_arr_filtered: Noise-filtered FRET value
-  p_init_star: initial probability distirubtion for xhh
-  A_star: transition matrix for xhh
-  C_star: transition matrix for xh
+  Nhh: Total # of hidden-hidden states
+  Nh: Total # of hiden states
+  A_0: transition matrix for hh
+  C_0: transition matrix for h
 
   Output:
-  xhh_arr_post: most-probable hidden sequencne.
-  log_delta_arr: log(delta) (see the Berchtold et al.)
+  log_probability
+  xhh_arr_post: Estimated one
+  xh_arr: just integer-value-converted version 
+  p_init_post
+  A_post
+  C_post
   """
   ## 1. Convert o_arr_filtered to xh_arr
   cdef int Nhh = plt.shape( A_star )[0] # or C_0[0]
@@ -51,7 +59,8 @@ def c_dcmm_viterbi_func( np.ndarray o_arr_filtered,
   cdef np.ndarray[DTYPE_t, ndim=1] xh_arr = np.zeros( T, dtype=DTYPE )
   cdef int i
   for t in range(T):
-    for i in range( Nh ): #len(fret_vals) ):
+    #for i in range( Nh ): #len(fret_vals) ):
+    for i in range( len(fret_vals) ):
       if o_arr_filtered[t] == fret_vals[i]:
         xh_arr[t] = DTYPE(i)
         continue
@@ -85,7 +94,7 @@ def c_dcmm_viterbi_func( np.ndarray o_arr_filtered,
 
     for i in range(Nhh):
       log_delta_arr[1, i] = log( p_init[i] ) \
-                             + log(  C[ i, xh_arr[0], xh_arr[1] ]  )
+                             + log(  C[ i, int(xh_arr[0]), int(xh_arr[1]) ]  )
   
     # induction
     for t in range(2, T):
@@ -95,11 +104,15 @@ def c_dcmm_viterbi_func( np.ndarray o_arr_filtered,
         for i in range(Nhh):
           tmp = log_delta_arr[t-1, i] \
                + log_A[i, j]
+          # to prevent -inf which causes error during cython compilation----#
+          if tmp == -np.inf:                                                #
+            tmp = -999999999/2.0                                            #
+          # ----------------------------------------------------------------#
           if tmp > mx:
             mx = tmp
             idx = i
         log_delta_arr[t, j] = mx \
-                             + log_C[ j, xh_arr[t-1], xh_arr[t] ]
+                             + log_C[ j, int(xh_arr[t-1]), int(xh_arr[t]) ]
         psi[t, j] = idx
   
     #termination
@@ -112,10 +125,10 @@ def c_dcmm_viterbi_func( np.ndarray o_arr_filtered,
     # Back tracking
     xhh_arr_post[T-1] = koko_idx
     for t in range(T-2, 0, -1): # T-2, T-1, ..., 0
-      xhh_arr_post[t] = psi[t+1, xhh_arr_post[t+1]]
+      xhh_arr_post[t] = psi[t+1, int(xhh_arr_post[t+1])]
   
     #return xhh_arr_post, mx, log_delta_arr, psi
-    return xhh_arr_post, log_delta_arr[-1, xhh_arr_post[-1]]
+    return xhh_arr_post, log_delta_arr[-1, int(xhh_arr_post[-1])]
 
   return viterbi( xh_arr, p_init_star, A_star, C_star )
   

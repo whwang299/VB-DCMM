@@ -895,7 +895,7 @@ def generate_xhh_func( T_xhh, K, A ):
   # xhh states assign
   for i in range(1, T):
     r = rand()
-    prev_n = xhh_arr[ i-1 ]
+    prev_n = int( xhh_arr[ i-1 ] )
     row_p_xhh = cumsum( p_xhh[prev_n,:] )
 
     # Assign next xhh state
@@ -939,7 +939,7 @@ def generate_o_func( xhh_arr, K, L, B, mu_arr, sig_arr ):
   xh_arr[0] = int( floor(r) )
   o_arr[0] = vals_xh[ int(xh_arr[0]) ] 
   
-  row_p_xh = cumsum( p_xh[ xhh_arr[0], xh_arr[0], :] )
+  row_p_xh = cumsum( p_xh[ int(xhh_arr[0]), int(xh_arr[0]), :] )
   r = rand()
   if r < row_p_xh[0]:
     xh_arr[1] = 0
@@ -960,7 +960,7 @@ def generate_o_func( xhh_arr, K, L, B, mu_arr, sig_arr ):
     
     # Assign next xh state
     r = rand()
-    row_p_xh = cumsum( p_xh[ xhh_arr[i], xh_arr[i], : ] )
+    row_p_xh = cumsum( p_xh[ int(xhh_arr[i]), int(xh_arr[i]), : ] )
     
     if r < row_p_xh[0]:
       xh_arr[i+1] = 0

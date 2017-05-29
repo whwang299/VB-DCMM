@@ -456,7 +456,7 @@ def c_hmm_func(o_arr, p_init_0, p_xh_0, mu_arr_0, sig_arr_0):
     # Back tracking
     xh_arr_post[T-1] = DTYPE (koko_idx)
     for t in range(T-2, -1, -1): # T-2, T-1, ..., 0
-      xh_arr_post[t] = psi[t+1, xh_arr_post[t+1]]
+      xh_arr_post[t] = psi[t+1, int(xh_arr_post[t+1])]
   
     return xh_arr_post, mx, log_delta_arr, psi
   
@@ -465,7 +465,7 @@ def c_hmm_func(o_arr, p_init_0, p_xh_0, mu_arr_0, sig_arr_0):
     cdef int t
     cdef np.ndarray[DTYPE_t, ndim=1] x_arr = np.zeros( shape(xh_arr_post), dtype=DTYPE )
     for t in range(T):
-      x_arr[t] = mu_arr_post[xh_arr_post[t]]
+      x_arr[t] = mu_arr_post[int(xh_arr_post[t])]
   
     return x_arr
   
